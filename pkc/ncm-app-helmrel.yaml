@@ -1,0 +1,22 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: ncm-app-ms
+  namespace: pkc
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: ./pkc/helmcharts/ncm-app-2.3.2.tgz
+      version: '2.3.2'
+      sourceRef:
+        kind: GitRepository
+        name: nc-app
+        namespace: pkc
+      reconcileStrategy: Revision
+      interval: 1m
+  targetNamespace: pkc
+  valuesFrom:
+  - kind: ConfigMap
+    name: ncm-app-values
+    valuesKey: values.yaml
