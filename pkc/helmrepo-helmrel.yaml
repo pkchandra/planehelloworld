@@ -1,23 +1,21 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
-metadata: # kpt-merge: default/helmrepo-ms
+metadata:
   name: helmrepo-ms
   namespace: pkc
-  annotations:
-    internal.kpt.dev/upstream-identifier: 'helm.toolkit.fluxcd.io|HelmRelease|default|helmrepo-ms'
 spec:
   interval: 1m
   chart:
     spec:
-      chart: ./pkc/helmcharts/helmrepo-1.0.4.tgz  # kpt-set: ./${targetNamespace}/helmcharts/hello-world-1.0.0.tgz
+      chart: ./pkc/helmcharts/helmrepo-1.0.4.tgz
       version: '1.0.4'
       sourceRef:
         kind: GitRepository
-        name: nc-app # kpt-set: ${gitreponame}
+        name: nc-app
         namespace: pkc
       reconcileStrategy: Revision
       interval: 1m
-  targetNamespace: pkc # kpt-set: ${targetNamespace}
+  targetNamespace: pkc
   valuesFrom:
   - kind: ConfigMap
     name: helmrepo-values
