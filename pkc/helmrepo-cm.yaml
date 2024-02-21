@@ -1,9 +1,7 @@
 kind: ConfigMap
-metadata: # kpt-merge: example/helmrepo-values
+metadata:
   name: helmrepo-values
   namespace: pkc
-  annotations:
-    internal.kpt.dev/upstream-identifier: '|ConfigMap|example|helmrepo-values'
 apiVersion: v1
 data:
   values.yaml: |
