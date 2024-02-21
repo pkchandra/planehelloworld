@@ -9,7 +9,7 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: ./pkc/helmcharts/hello-world-1.0.32.tgz  # kpt-set: ./${targetNamespace}/helmcharts/hello-world-1.0.0.tgz
+      chart: ./pkc/helmcharts/helmrepo-1.0.4.tgz  # kpt-set: ./${targetNamespace}/helmcharts/hello-world-1.0.0.tgz
       version: '1.0.0'
       sourceRef:
         kind: GitRepository
