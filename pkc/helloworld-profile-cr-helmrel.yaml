@@ -1,21 +1,19 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
-metadata: # kpt-merge: default/helloworld-profile-cr-ms
+metadata:
   name: helloworld-profile-cr-ms
   namespace: pkc
-  annotations:
-    internal.kpt.dev/upstream-identifier: 'helm.toolkit.fluxcd.io|HelmRelease|default|helloworld-profile-cr-ms'
 spec:
   interval: 1m
   chart:
     spec:
-      chart: ./pkc/helmcharts/hello-world-1.0.32.tgz  # kpt-set: ./${targetNamespace}/helmcharts/hello-world-1.0.0.tgz
-      version: '1.0.0'
+      chart: ./pkc/helmcharts/hello-world-1.0.32.tgz
+      version: '1.0.32'
       sourceRef:
         kind: GitRepository
-        name: nc-app # kpt-set: ${gitreponame}
+        name: nc-app
         namespace: pkc
       reconcileStrategy: Revision
       interval: 1m
-  targetNamespace: pkc # kpt-set: ${targetNamespace}
+  targetNamespace: pkc
   
