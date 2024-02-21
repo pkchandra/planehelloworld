@@ -7,7 +7,4 @@ metadata: # kpt-merge: example/helmrepo-values
 apiVersion: v1
 data:
   values.yaml: |
-    replicaCount: 1  # kpt-set: ${replicas}
     url: https://repo.lab.pl.alcatel-lucent.com/csf-helm-stable/
-    image:
-      tag: latest
