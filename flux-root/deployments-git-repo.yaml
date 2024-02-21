@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: nc-app
+  namespace: pkc
+spec:
+  interval: 5m
+  url: https://github.com/pkchandra/planehelloworld
+  ref:
+    branch: main
