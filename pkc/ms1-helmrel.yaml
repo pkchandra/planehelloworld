@@ -1,0 +1,24 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata: # kpt-merge: default/network-function-ms1
+  name: network-function-ms1
+  namespace: network-function-flux-a
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'helm.toolkit.fluxcd.io|HelmRelease|default|network-function-ms1'
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: ./network-function-flux-a/helmcharts/hello-world-1.0.0.tgz  # kpt-set: ./${targetNamespace}/helmcharts/hello-world-1.0.0.tgz
+      version: '1.0.0'
+      sourceRef:
+        kind: GitRepository
+        name: nc-app # kpt-set: ${gitreponame}
+        namespace: default
+      reconcileStrategy: Revision
+      interval: 1m
+  targetNamespace: network-function-flux-a # kpt-set: ${targetNamespace}
+  valuesFrom:
+  - kind: ConfigMap
+    name: network-function-values
+    valuesKey: values.yaml
