@@ -1,0 +1,14 @@
+apiVersion: v1
+appVersion: 1.0.7
+description: GO Hello world web Application
+home: https://golang.org
+icon: https://upload.wikimedia.org/wikipedia/commons/2/23/Golang.png
+keywords:
+- go
+- http
+- web
+maintainers:
+- email: csf-compaas@list.nokia.com
+  name: ComPaaS Team
+name: helloworld-go
+version: 1.3.51

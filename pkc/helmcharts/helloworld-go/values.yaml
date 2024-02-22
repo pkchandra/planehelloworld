@@ -1,0 +1,129 @@
+hooks:
+  dependency:
+    name: ""
+global:
+  registry: "csf-docker-delivered.repo.cci.nokia.net"
+rbac:
+  enabled: true
+
+kubectlImage: "tools/kubectl"
+kubectlTag: "v1.14.3-nano"
+
+replicas: 1
+image:
+  repository: "helloworld_go"
+  tag: "1.0.7"
+  pullPolicy: "IfNotPresent"
+
+language: "english"
+
+testImage:
+  repository: "base/rhel"
+  tag: "20181127"
+  pullPolicy: "IfNotPresent"
+  restartPolicy: "OnFailure"
+
+hookJobsImage:
+  repository: "tools/kubectl"
+  tag: "v1.14.3-nano"
+  pullPolicy: "IfNotPresent"
+  restartPolicy: "Never"
+
+# This is deprecated.
+# Use 'hookjobs' instead.
+#hookjob:
+#  enabled: false
+#  name: pre-install
+#  sleeptimeout: 0
+
+# Add hook jobs.
+# More than one hook is possible.
+hookjobs: {}
+  #  - name: pre-install
+  #  sleeptimeout: 0
+  #  backoffLimit: 0
+
+containerPorts:
+  http:
+    port: 9000
+    protocol: TCP
+
+service:
+  enabled: true
+  name: helloworld-go
+  type: ClusterIP
+  ports:
+    app:
+      port: 9000
+      targetPort: http
+      protocol: TCP
+
+ingress:
+  enabled: false
+  annotations:
+    nginx.ingress.kubernetes.io/secure-backends: "false"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  servicePort: 9000
+  path: /helloworld
+  host:
+  tls:
+    enabled: false
+    secretName: ingress-tls-certificate
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 200m
+    memory: 100Mi
+  requests:
+    cpu: 50m
+    memory: 10Mi
+
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+containerSecurityContext:
+  capabilities:
+    drop: ["ALL"]
+  readOnlyRootFileSystem: true
+  allowPrivilegeEscalation: false
+
+cbur:
+  # Parameters for CBUR BrPolicy
+  enabled: false
+  # Periodic backup frequency if enabled
+  cronSpec: "\"*/10 * * * *\""
+  # Maximum backup copies, so it will rollover after reaching max count
+  maxiCopy: 5
+  cburagent:
+    repo: cbur/cbura
+    tag: 1.0.3-232
+    imagePullPolicy: IfNotPresent
+
+k8swait:
+  enabled: false
+  repo: tools/k8s_wait
+  tag: 1.0.2-1.12
+  job:
+    jobname: "dummy-job"
+    repo: "os_base/centos-nano"
+    tag: "7.7-20191216"
+    pullPolicy: "IfNotPresent"
+    restartPolicy: "OnFailure"
+  parameters:
+    name: "k8s-wait-test"
+    cluster: "in"
+    resource: "job"
+    timeout: 15
+    frequence: 1
+
+pvc:
+  enabled: false
+storageclassname: ""
+

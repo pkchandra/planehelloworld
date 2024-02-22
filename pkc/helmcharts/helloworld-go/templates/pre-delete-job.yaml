@@ -1,0 +1,45 @@
+{{- if .Values.hooks.dependency.name }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-pre-delete
+  labels:
+    app: {{ .Release.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      serviceAccount: {{ .Release.Name }}-admin
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+      restartPolicy: Never
+      containers:
+      - image: "{{ .Values.global.registry }}/{{ .Values.kubectlImage }}:{{ .Values.kubectlTag }}"
+        name: {{ .Release.Name }}
+{{- if .Values.containerSecurityContext }}
+        securityContext:
+{{ toYaml .Values.containerSecurityContext | indent 10 }}
+{{- end }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        command:
+        - sh
+        - -c
+        - |
+          echo 'Pre delete for release: {{ .Release.Name }}'
+          kubectl get deployments  -n {{ .Release.Namespace}} -l release={{ .Values.hooks.dependency.name }} &> /tmp/file.txt
+          grep "No resources found" /tmp/file.txt || exit 1
+{{- end }}

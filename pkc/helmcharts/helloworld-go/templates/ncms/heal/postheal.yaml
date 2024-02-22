@@ -1,0 +1,27 @@
+
+{{ if gt (int .Values.global.postheal ) 0 }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ template "fullname" . }}-postheal"
+spec:
+  template:
+    spec:
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+      containers:
+      - name: {{ template "fullname" . }}-postheal
+        image: "{{ .Values.global.registry }}/{{ .Values.kubectlImage }}:{{ .Values.kubectlTag }}"
+        imagePullPolicy: IfNotPresent
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        securityContext:
+{{ toYaml .Values.containerSecurityContext | indent 10 }}
+        command:
+          - sh
+          - "-c"
+          - |
+            echo "PostHeal hook!"
+            sleep 2
+      restartPolicy: Never
+{{- end }}

@@ -1,0 +1,50 @@
+{{- if and (.Values.rbac.enabled) (.Values.hooks.dependency.name) }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-admin
+  namespace: "{{.Release.Namespace}}"
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: "{{.Release.Namespace}}"
+  name: {{ .Release.Name }}-role
+  labels:
+    release: {{ .Release.Name }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - extensions
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ .Release.Name }}-rolebinding
+  namespace: "{{.Release.Namespace}}"
+  labels:
+    release: {{ .Release.Name }}
+subjects:
+- kind: ServiceAccount
+  name: {{ .Release.Name }}-admin
+  namespace: "{{.Release.Namespace}}"
+roleRef:
+  kind: Role
+  name: {{ .Release.Name }}-role
+  apiGroup: rbac.authorization.k8s.io
+---
+{{- end }}

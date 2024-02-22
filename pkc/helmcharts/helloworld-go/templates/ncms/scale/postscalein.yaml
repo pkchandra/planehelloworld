@@ -1,0 +1,27 @@
+
+{{ if gt (int .Values.postscalein ) 0 }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ template "fullname" . }}-postscalein"
+spec:
+  template:
+    spec:
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+      containers:
+      - name: {{ template "fullname" . }}-postscalein
+        image: "{{ .Values.global.registry }}/{{ .Values.kubectlImage }}:{{ .Values.kubectlTag }}"
+        imagePullPolicy: IfNotPresent
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        securityContext:
+{{ toYaml .Values.containerSecurityContext | indent 10 }}
+        command:
+          - sh
+          - "-c"
+          - |
+            echo "PostScaleIn hook!"
+            sleep 2
+      restartPolicy: Never
+{{- end }}

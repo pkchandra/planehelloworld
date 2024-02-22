@@ -1,0 +1,43 @@
+{{- if .Values.hookjob -}}
+{{- if .Values.hookjob.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "fullname" .}}-{{ .Values.hookjob.name }}-job
+  labels:
+    app: {{ .Release.Name }}-{{ template "name" . }}
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": {{ .Values.hookjob.name }}
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": before-hook-creation, hook-succeeded, hook-failed
+spec:
+    template:
+      spec:
+        securityContext:
+{{ toYaml .Values.securityContext | indent 10 }}
+        containers:
+        - name: "{{ .Values.hookjob.name }}-hook-job"
+          image: "{{ .Values.global.registry }}/{{ .Values.testImage.repository }}:{{ .Values.testImage.tag }}"
+          imagePullPolicy: {{ .Values.testImage.pullPolicy }}
+{{- if .Values.containerSecurityContext }}
+          securityContext:
+{{ toYaml .Values.containerSecurityContext | indent 10 }}
+{{- end }}
+          command: ["/bin/sh", "-c"]
+          args:  [" sleep {{ .Values.hookjob.sleeptimeout }} "]
+          resources:
+            limits:
+              cpu: 100m
+              memory: 200Mi
+            requests:
+              cpu: 10m
+              memory: 10Mi
+        restartPolicy: {{ .Values.testImage.restartPolicy }}
+    backoffLimit: 4
+{{- end -}}
+{{- end -}}

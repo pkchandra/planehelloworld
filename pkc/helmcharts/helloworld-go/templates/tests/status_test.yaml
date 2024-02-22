@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-status-test-{{randAlphaNum 6 | lower}}"
+  annotations:
+    "helm.sh/hook": test-success
+    "helm.sh/hook-delete-policy": "before-hook-creation, hook-succeeded"
+spec:
+  restartPolicy: Never
+  securityContext:
+{{ toYaml .Values.securityContext | indent 4 }}
+  containers:
+    - name: {{ .Release.Name }}-status-test
+      image: "{{ .Values.global.registry }}/{{ .Values.testImage.repository }}:{{ .Values.testImage.tag }}"
+{{- if .Values.containerSecurityContext }}
+      securityContext:
+{{ toYaml .Values.containerSecurityContext | indent 8 }}
+{{- end }}
+      env:
+        - name: PORT
+          value: {{ .Values.service.ports.app.port | quote }}
+        - name: SERVICE_URL
+          value: {{ template "fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+      command:
+      - bash
+      - "-c"
+      - |
+        retry=60;
+        i=1;
+        while [ $i -lt $retry ];do
+          unset RC
+          echo "executing curl -ks http://$SERVICE_URL:$PORT"
+          res=$(curl -ks http://$SERVICE_URL:$PORT)
+          echo $res
+          if [[ "$res" =~ "GO Hello World" ||  "$res" =~ "GO Ciao mondo" || "$res" =~ "GO Salut le monde" ]]
+          then
+            exit 0
+          else
+            let "i+=1"
+            sleep 10
+            continue
+          fi
+        done
+  restartPolicy: Never
+
