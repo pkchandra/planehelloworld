@@ -1,7 +1,7 @@
 kind: ConfigMap
 metadata: # kpt-merge: example/network-function-values
-  name: network-function-values
-  namespace: network-function-flux-a
+  name: ms-values
+  namespace: pkc
   annotations:
     internal.kpt.dev/upstream-identifier: '|ConfigMap|example|network-function-values'
 apiVersion: v1
