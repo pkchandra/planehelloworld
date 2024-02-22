@@ -11,7 +11,7 @@ spec:
       version: '2.3.2'
       sourceRef:
         kind: GitRepository
-        name: nc-app
+        name: ncp-app
         namespace: pkc
       reconcileStrategy: Revision
       interval: 1m
