@@ -1,0 +1,12 @@
+kind: ConfigMap
+metadata: # kpt-merge: example/network-function-values
+  name: network-function-values
+  namespace: network-function-flux-a
+  annotations:
+    internal.kpt.dev/upstream-identifier: '|ConfigMap|example|network-function-values'
+apiVersion: v1
+data:
+  values.yaml: |
+    replicaCount: 2  # kpt-set: ${replicas}
+    image:
+      tag: latest
