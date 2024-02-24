@@ -13,7 +13,6 @@ spec:
         kind: GitRepository
         name: ncp-app
         namespace: pkc
-      reconcileStrategy: Revision
       interval: 1m
   targetNamespace: pkc
   valuesFrom:
