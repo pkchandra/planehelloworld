@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   interval: 15m
-  path: ./pkc1
+  path: ./pkc
   prune: true
   sourceRef:
     kind: GitRepository
