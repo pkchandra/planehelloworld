@@ -12,3 +12,4 @@ data:
     controller: true
     helm3Only: true
     checkLabelling: false
+    clusterWideInstall: true
