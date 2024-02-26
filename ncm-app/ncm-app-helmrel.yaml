@@ -8,7 +8,7 @@ spec:
   timeout: 5m
   chart:
     spec:
-      chart: ./pkc/helmcharts/ncm-app-2.3.2.tgz
+      chart: ./ncm-app/helmcharts/ncm-app-2.3.2.tgz
       version: '2.3.2'
       sourceRef:
         kind: GitRepository
