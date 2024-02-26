@@ -4,6 +4,8 @@ metadata:
   name: helmrepo-ms
   namespace: pkc
 spec:
+  dependsOn:
+  - name: ncm-app
   interval: 1m
   chart:
     spec:
