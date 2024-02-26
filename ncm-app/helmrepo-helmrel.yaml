@@ -7,7 +7,7 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: ./pkc/helmcharts/helmrepo-1.0.4.tgz
+      chart: ./ncm-app/helmcharts/helmrepo-1.0.4.tgz
       version: '1.0.4'
       sourceRef:
         kind: GitRepository
