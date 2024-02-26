@@ -1,0 +1,21 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: helmrepo-ms
+  namespace: pkc
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: ./pkc/helmcharts/helmrepo-1.0.4.tgz
+      version: '1.0.4'
+      sourceRef:
+        kind: GitRepository
+        name: ncp-app
+        namespace: pkc
+      interval: 1m
+  targetNamespace: pkc
+  valuesFrom:
+  - kind: ConfigMap
+    name: helmrepo-values
+    valuesKey: values.yaml

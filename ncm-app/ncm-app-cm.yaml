@@ -1,0 +1,15 @@
+kind: ConfigMap
+metadata:
+  name: ncm-app-values
+  namespace: pkc
+apiVersion: v1
+data:
+  values.yaml: |
+    autonomous:
+      enabled: true
+    webhook:
+      validate: false
+    controller: true
+    helm3Only: true
+    checkLabelling: false
+    clusterWideInstall: true
