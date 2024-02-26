@@ -5,7 +5,7 @@ metadata:
   namespace: pkc
 spec:
   interval: 15m
-  path: ./profile-cr
+  path: ./helloworld-go
   prune: true
   sourceRef:
     kind: GitRepository
