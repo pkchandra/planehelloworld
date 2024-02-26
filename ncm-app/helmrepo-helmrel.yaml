@@ -5,7 +5,7 @@ metadata:
   namespace: pkc
 spec:
   dependsOn:
-  - name: ncm-app
+  - name: ncm-app-ms
   interval: 1m
   chart:
     spec:
