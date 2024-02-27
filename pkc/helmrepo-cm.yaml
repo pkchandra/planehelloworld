@@ -1,8 +1,0 @@
-kind: ConfigMap
-metadata:
-  name: helmrepo-values
-  namespace: pkc
-apiVersion: v1
-data:
-  values.yaml: |
-    url: https://repo.lab.pl.alcatel-lucent.com/csf-helm-stable/
